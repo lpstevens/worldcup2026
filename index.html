@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>World Cup 2026 Dashboard</title>
   <style>
+    /* --- LIGHT MODE VARIABLES (DEFAULT) --- */
     :root {
       --bg-color: #f1f5f9;
       --navy: #0f172a;
@@ -15,6 +16,18 @@
       --border: #e2e8f0;
       --card-bg: #ffffff;
       --radius: 12px;
+      --flag-bg: #f8fafc;
+    }
+
+    /* --- DARK MODE VARIABLES --- */
+    body.dark-theme {
+      --bg-color: #0b0f19;
+      --navy: #f8fafc;
+      --text-main: #f8fafc;
+      --text-light: #94a3b8;
+      --border: #334155;
+      --card-bg: #1e293b;
+      --flag-bg: #334155;
     }
 
     * {
@@ -22,6 +35,7 @@
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
     }
 
     body {
@@ -32,9 +46,10 @@
 
     /* --- PREMIUM HEADER & DASHBOARD STATS --- */
     header {
+      position: relative;
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       color: white;
-      padding: 40px 20px;
+      padding: 50px 20px 40px 20px;
       text-align: center;
       border-bottom: 4px solid var(--blue);
     }
@@ -46,6 +61,28 @@
       margin-bottom: 20px;
     }
 
+    /* DARK MODE TOGGLE BUTTON */
+    .theme-toggle-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12px;
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .theme-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
     .dashboard-stats {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -55,11 +92,11 @@
     }
 
     .stat-bubble {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.06);
       backdrop-filter: blur(8px);
       padding: 15px;
       border-radius: var(--radius);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
     .stat-bubble .num {
@@ -107,7 +144,7 @@
       margin-bottom: 15px;
     }
 
-    /* --- FILTERS (STYLISH) --- */
+    /* --- FILTERS --- */
     .filters {
       display: flex;
       gap: 10px;
@@ -125,7 +162,6 @@
       color: var(--text-light);
       cursor: pointer;
       white-space: nowrap;
-      transition: all 0.2s ease;
     }
 
     .filter-btn.active {
@@ -135,7 +171,7 @@
       box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
     }
 
-    /* --- SPEELSCHEMA (FIFA / SPORZA STIJL) --- */
+    /* --- SPEELSCHEMA --- */
     .date-group {
       margin-bottom: 35px;
     }
@@ -165,11 +201,6 @@
       padding: 24px 20px;
       border: 1px solid var(--border);
       box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
-      transition: transform 0.2s;
-    }
-
-    .fixture-card:hover {
-      transform: translateY(-2px);
     }
 
     .fixture-top {
@@ -195,7 +226,7 @@
       width: 44px;
       height: 30px;
       border-radius: 4px;
-      background: #f8fafc;
+      background: var(--flag-bg);
       display: grid;
       place-items: center;
       font-size: 24px;
@@ -208,11 +239,49 @@
       letter-spacing: -1px;
       color: var(--navy);
       padding: 0 10px;
+      text-align: center;
     }
 
     .fixture-time {
-      font-weight: 500;
+      font-weight: 600;
       color: var(--blue);
+    }
+
+    /* PULSATING LIVE INDICATOR */
+    .live-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .live-badge {
+      background: #ef4444;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 4px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background-color: white;
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(255, 255, 255, 0); }
+      100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
     }
 
     .fixture-meta {
@@ -223,12 +292,31 @@
       font-weight: 600;
     }
 
-    .fixture-meta strong {
+    .fixture-meta .meta-details {
       display: block;
-      color: var(--navy);
-      font-size: 15px;
-      margin-bottom: 2px;
+      margin-top: 6px;
     }
+
+    /* DYNAMIC GROUP BADGES */
+    .group-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+    .group-a { background: #fee2e2; color: #991b1b; }
+    .group-b { background: #fef3c7; color: #92400e; }
+    .group-c { background: #dcfce7; color: #166534; }
+    .group-f { background: #e0f2fe; color: #0369a1; }
+    .group-default { background: var(--border); color: var(--text-light); }
+
+    body.dark-theme .group-a { background: #7f1d1d; color: #fca5a5; }
+    body.dark-theme .group-b { background: #78350f; color: #fcd34d; }
+    body.dark-theme .group-c { background: #064e3b; color: #6ee7b7; }
+    body.dark-theme .group-f { background: #0c4a6e; color: #7dd3fc; }
 
     /* --- BROADCASTERS / MEDIA LINKS --- */
     .fixture-broadcast {
@@ -243,20 +331,18 @@
     }
 
     .broadcaster {
-      background: #f8fafc;
+      background: var(--bg-color);
       border: 1px solid var(--border);
-      padding: 5px 12px;
+      padding: 6px 14px;
       border-radius: 8px;
-      color: var(--navy);
+      color: var(--text-main);
       font-size: 12px;
       font-weight: 800;
       text-decoration: none;
-      transition: all 0.2s;
     }
 
     .broadcaster:hover {
-      background: #e2e8f0;
-      border-color: #cbd5e1;
+      filter: brightness(0.9);
     }
 
     .broadcaster.sporza {
@@ -265,9 +351,15 @@
       border-color: #111827;
     }
 
-    .broadcaster.sporza:hover {
-      background: var(--blue);
-      border-color: var(--blue);
+    body.dark-theme .broadcaster.sporza {
+      background: #475569;
+      border-color: #475569;
+    }
+
+    .broadcaster.fbref {
+      background: #15803d;
+      color: #ffffff;
+      border-color: #15803d;
     }
 
     /* --- WIDGET SECTIONS --- */
@@ -282,12 +374,16 @@
     }
 
     .demo-badge {
-      background: #fef08a;
-      color: #854d0e;
+      background: #e0f2fe;
+      color: #0369a1;
       font-size: 11px;
       padding: 4px 10px;
       border-radius: 20px;
       font-weight: 800;
+    }
+    body.dark-theme .demo-badge {
+      background: #0c4a6e;
+      color: #7dd3fc;
     }
 
     .widget-card {
@@ -296,6 +392,13 @@
       border: 1px solid var(--border);
       padding: 20px;
       box-shadow: 0 4px 18px rgba(15, 23, 42, 0.03);
+    }
+
+    .stats-btn-container {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 12px 0 18px 0;
     }
 
     .stat-row {
@@ -318,10 +421,6 @@
       margin-top: 10px;
     }
 
-    .news-link-block:hover {
-      text-decoration: underline;
-    }
-
     #loading {
       text-align: center;
       padding: 40px;
@@ -342,6 +441,7 @@
 <body>
 
   <header>
+    <button id="themeToggle" class="theme-toggle-btn">🌙 Dark Mode</button>
     <h1>World Cup 2026</h1>
     <div class="dashboard-stats">
       <div class="stat-bubble">
@@ -361,34 +461,49 @@
 
   <div class="container">
 
+    <!-- TOPWEDSTRIJD CARD (HERO) -->
     <div class="hero-card">
       <span class="hero-tag">🔥 Openingsmatch</span>
       <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 8px;">Mexico vs Polen</h2>
       <p style="color: #cbd5e1; font-weight: 600;">Het toernooi trapt officieel af in het legendarische Estadio Azteca!</p>
     </div>
     
+    <!-- FILTERS -->
     <div class="filters" id="filters">
       <button class="filter-btn active" data-filter="all">Volledig Speelschema</button>
-      <button class="filter-btn" data-filter="upcoming">Aankomende Matchen</button>
+      <button class="filter-btn" data-filter="upcoming">Aankomende / Live Matchen</button>
       <button class="filter-btn" data-filter="finished">Gespeelde Matchen</button>
     </div>
 
+    <!-- SPEELSCHEMA CONTAINER -->
     <div id="loading">Live data ophalen...</div>
     <div id="scheduleList"></div>
 
+    <!-- NIEUWS WIDGET -->
     <div class="section-title">
       <span>Nieuws & Media</span>
     </div>
     <div class="widget-card">
-      <p style="font-weight: 600; color: var(--text-light); margin-bottom: 8px;">Blijf op de hoogte via de officiële Belgische rechtenhouder:</p>
-      <a class="news-link-block" href="https://sporza.be/" target="_blank" rel="noopener">Ga naar Sporza Voetbal →</a>
+      <p style="font-weight: 600; color: var(--text-light); margin-bottom: 8px;">Blijf op de hoogte van alle updates en video's via Sporza:</p>
+      <a class="news-link-block" href="https://sporza.be/nl/categorie/voetbal/wk-voetbal-2026-in-canada-mexico-en-de-verenigde-staten/" target="_blank" rel="noopener">Ga naar Sporza WK 2026 Hub →</a>
     </div>
 
+    <!-- LIVE STATS WIDGET -->
     <div class="section-title">
-      <span>Topscorers</span>
-      <span class="demo-badge">Live Toernooi Data</span>
+      <span>Toernooi Statistieken</span>
+      <span class="demo-badge">Live Feeds</span>
     </div>
     <div class="widget-card">
+      <p style="font-weight: 600; color: var(--text-light); margin-bottom: 4px;">Bekijk live updates en uitgebreide data via ESPN & FBref:</p>
+      
+      <div class="stats-btn-container">
+        <a class="broadcaster" href="https://www.espn.com/soccer/stats/_/league/FIFA.WORLD/view/scoring" target="_blank" rel="noopener">⚽ Scoring & Assists (ESPN)</a>
+        <a class="broadcaster" href="https://www.espn.com/soccer/stats/_/league/FIFA.WORLD/view/performance" target="_blank" rel="noopener">📈 Prestaties (ESPN)</a>
+        <a class="broadcaster" href="https://www.espn.com/soccer/stats/_/league/FIFA.WORLD/view/discipline" target="_blank" rel="noopener">🟨 Discipline (ESPN)</a>
+        <a class="broadcaster fbref" href="https://fbref.com/en/comps/1/World-Cup-Stats" target="_blank" rel="noopener">📊 Advanced Analytics (FBref)</a>
+      </div>
+
+      <p style="font-weight: 600; color: var(--text-light); border-top: 1px solid var(--border); padding-top: 14px; margin-bottom: 6px;">Huidige Topscorers:</p>
       <div class="stat-row">
         <span>1. Kylian Mbappé (FRA)</span>
         <span>0 ⚽</span>
@@ -406,15 +521,15 @@
   </div>
 
   <script>
-    // Config & Fallback Data
     const API_URL = "https://example.com/api/worldcup"; 
     let allMatches = [];
     let activeFilter = "all";
 
+    // DEMO DATA NU INCLUSIEF EEN 'LIVE' MATCH EN SCORES
     const DEMO_MATCHES = [
       { id: 1, date: "2026-06-11", time: "22:00", team1: "Mexico", team2: "Poland", group: "Groep A", stadium: "Estadio Azteca (Mexico City)", round: "Groepsfase" },
       { id: 2, date: "2026-06-11", time: "23:30", team1: "Belgium", team2: "Canada", group: "Groep F", stadium: "BMO Field (Toronto)", round: "Groepsfase", score: { home: 2, away: 0 }, status: "finished" },
-      { id: 3, date: "2026-06-12", time: "20:00", team1: "England", team2: "USA", group: "Groep B", stadium: "MetLife Stadium (New York)", round: "Groepsfase" },
+      { id: 3, date: "2026-06-12", time: "20:00", team1: "England", team2: "USA", group: "Groep B", stadium: "MetLife Stadium (New York)", round: "Groepsfase", score: { home: 1, away: 1 }, status: "live" },
       { id: 4, date: "2026-06-12", time: "23:00", team1: "Scotland", team2: "Germany", group: "Groep C", stadium: "BC Place (Vancouver)", round: "Groepsfase" }
     ];
 
@@ -431,7 +546,6 @@
       return codes[name] || String(teamName || "TBD").slice(0, 3).toUpperCase();
     }
 
-    // GEFIXTE Unicode-vlaggen voor Engeland en Schotland
     function getTeamFlag(teamName) {
       const flags = {
         "mexico": "🇲🇽", "poland": "🇵🇱", "belgium": "🇧🇪", "canada": "🇨🇦",
@@ -441,20 +555,38 @@
       return flags[name] || "🏳️";
     }
 
+    function getGroupBadgeClass(groupName) {
+      const g = String(groupName || "").toLowerCase();
+      if (g.includes("groep a")) return "group-a";
+      if (g.includes("groep b")) return "group-b";
+      if (g.includes("groep c")) return "group-c";
+      if (g.includes("groep f")) return "group-f";
+      return "group-default";
+    }
+
     function formatFullDutchDate(dateString) {
       if (!dateString) return "";
       const date = new Date(dateString + "T12:00:00");
       return date.toLocaleDateString("nl-BE", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
     }
 
-    // De herstelde, schone Fixture Card layout (FIFA/Sporza stijl)
     function fixtureCard(m) {
-      const hasScore = m.status === "finished" && m.score;
-      const centerValue = hasScore
-        ? `<div class="fixture-score">${m.score.home} - ${m.score.away}</div>`
-        : `<div class="fixture-time">${escapeHtml(m.time || "TBD")}</div>`;
+      let centerValue = "";
+      
+      if (m.status === "live") {
+        centerValue = `
+          <div class="live-center">
+            <div class="fixture-score" style="color: #ef4444;">${m.score.home} - ${m.score.away}</div>
+            <span class="live-badge"><span class="live-dot"></span>Live</span>
+          </div>
+        `;
+      } else if (m.status === "finished" && m.score) {
+        centerValue = `<div class="fixture-score">${m.score.home} - ${m.score.away}</div>`;
+      } else {
+        centerValue = `<div class="fixture-time">${escapeHtml(m.time || "TBD")}</div>`;
+      }
 
-      const meta = [m.group, m.stadium].filter(Boolean).join(" · ");
+      const sporzaWkUrl = "https://sporza.be/nl/categorie/voetbal/wk-voetbal-2026-in-canada-mexico-en-de-verenigde-staten/";
 
       return `
         <div class="fixture-card">
@@ -470,12 +602,12 @@
             </div>
           </div>
           <div class="fixture-meta">
-            <strong>${escapeHtml(m.round || "Groepsfase")}</strong>
-            ${escapeHtml(meta)}
+            <span class="group-badge ${getGroupBadgeClass(m.group)}">${escapeHtml(m.group || "Groepsfase")}</span>
+            <span class="meta-details"><strong>${escapeHtml(m.round || "Groepsfase")}</strong> · ${escapeHtml(m.stadium)}</span>
           </div>
           <div class="fixture-broadcast">
             <span>▻ Live kijken:</span>
-            <a href="https://sporza.be" target="_blank" rel="noopener" class="broadcaster sporza">Sporza</a>
+            <a href="${sporzaWkUrl}" target="_blank" rel="noopener" class="broadcaster sporza">Sporza</a>
             <a href="https://www.vrt.be/vrtmax/" target="_blank" rel="noopener" class="broadcaster">VRT MAX</a>
             <a href="https://www.rtbf.be/auvio/" target="_blank" rel="noopener" class="broadcaster">Auvio / RTBF</a>
           </div>
@@ -513,7 +645,6 @@
       `).join("");
     }
 
-    // API-fetch met een automatische 5-seconden limiet (timeout)
     async function fetchMatches() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
@@ -525,7 +656,7 @@
         allMatches = await response.json();
       } catch (error) {
         clearTimeout(timeoutId);
-        console.log("Er is geen live API verbonden, de prachtige demo-data wordt ingeladen.");
+        console.log("Geen live API gekoppeld. Demo-data ingeladen.");
         allMatches = DEMO_MATCHES;
       }
 
@@ -533,7 +664,20 @@
       renderSchedule();
     }
 
-    // Filter klik-logica
+    // DARK MODE INTERACTIE & LOCALSTORAGE
+    const themeToggle = document.getElementById("themeToggle");
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark-theme");
+      themeToggle.innerHTML = "☀️ Light Mode";
+    }
+
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark-theme");
+      const isDark = document.body.classList.contains("dark-theme");
+      themeToggle.innerHTML = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    });
+
     document.getElementById("filters").addEventListener("click", (e) => {
       if (e.target.classList.contains("filter-btn")) {
         document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
@@ -543,7 +687,6 @@
       }
     });
 
-    // Start de app
     fetchMatches();
   </script>
 </body>
