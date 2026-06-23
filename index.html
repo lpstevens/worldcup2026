@@ -3,207 +3,796 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07172f" />
   <title>WorldCup 2026 Dashboard</title>
   <style>
     :root {
-      --bg: #eef3f8; --card: #fff; --card-soft: #f8fafc; --ink: #0f172a; --muted: #64748b;
-      --line: #e2e8f0; --navy: #07172f; --blue: #2563eb; --green: #22c55e; --orange: #f97316; --red: #ef4444; --purple: #7c3aed;
-      --radius: 24px; --radius-xl: 34px; --shadow: 0 18px 50px rgba(15,23,42,.08); --shadow-soft: 0 10px 30px rgba(15,23,42,.06);
+      --bg: #eef2f7;
+      --card: #ffffff;
+      --soft: #f8fafc;
+      --navy: #07172f;
+      --navy-2: #0f2447;
+      --text: #0f172a;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --green: #22c55e;
+      --green-dark: #15803d;
+      --blue: #2563eb;
+      --orange: #f97316;
+      --red: #ef4444;
+      --purple: #7c3aed;
+      --radius-lg: 34px;
+      --radius: 24px;
+      --shadow: 0 18px 55px rgba(15, 23, 42, 0.10);
     }
-    body.dark { --bg:#08111f; --card:#111c2e; --card-soft:#0b1323; --ink:#f8fafc; --muted:#94a3b8; --line:#263449; --navy:#f8fafc; --shadow:0 18px 50px rgba(0,0,0,.28); --shadow-soft:0 10px 30px rgba(0,0,0,.18); }
-    * { box-sizing:border-box; margin:0; padding:0; }
-    html { scroll-behavior:smooth; }
-    body { min-height:100vh; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; background:radial-gradient(circle at top left,rgba(34,197,94,.18),transparent 30%),radial-gradient(circle at 85% 10%,rgba(37,99,235,.16),transparent 28%),var(--bg); color:var(--ink); padding-bottom:86px; }
-    a { color:inherit; } button,select { font:inherit; }
-    .shell { max-width:1220px; margin:0 auto; padding:22px; }
-    .topbar { display:flex; justify-content:space-between; gap:14px; align-items:center; margin-bottom:16px; }
-    .brand { display:flex; gap:12px; align-items:center; font-weight:950; letter-spacing:-.7px; color:var(--navy); font-size:18px; }
-    .brand-mark { width:42px; height:42px; display:grid; place-items:center; border-radius:15px; color:white; background:linear-gradient(135deg,#061a33,#16a34a); box-shadow:var(--shadow-soft); }
-    .top-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
-    .control { display:inline-flex; align-items:center; gap:8px; height:42px; border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.72); color:var(--ink); padding:0 13px; box-shadow:var(--shadow-soft); backdrop-filter:blur(14px); font-weight:800; font-size:13px; }
-    body.dark .control { background:rgba(17,28,46,.76); }
-    .control select { border:0; outline:0; background:transparent; color:var(--ink); font-weight:900; max-width:178px; }
-    .theme-btn { cursor:pointer; border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:999px; min-height:42px; padding:0 14px; font-weight:900; box-shadow:var(--shadow-soft); }
-    .hero { display:grid; grid-template-columns:1.2fr .8fr; gap:18px; margin-bottom:18px; }
-    .hero-main { min-height:360px; position:relative; overflow:hidden; border-radius:var(--radius-xl); padding:34px; color:white; background:radial-gradient(circle at 82% 24%,rgba(34,197,94,.42),transparent 18%),radial-gradient(circle at 20% 85%,rgba(37,99,235,.32),transparent 26%),linear-gradient(135deg,#061a33 0%,#0f2b57 48%,#14532d 100%); box-shadow:0 28px 80px rgba(6,26,51,.25); }
-    .hero-main:after { content:""; position:absolute; right:-110px; top:-110px; width:330px; height:330px; border-radius:50%; border:34px solid rgba(255,255,255,.07); }
-    .hero-main:before { content:"⚽"; position:absolute; right:28px; bottom:18px; font-size:110px; opacity:.16; transform:rotate(-12deg); }
-    .hero-content { position:relative; z-index:1; display:flex; flex-direction:column; min-height:292px; justify-content:space-between; }
-    .eyebrow { display:inline-flex; width:fit-content; align-items:center; gap:8px; border-radius:999px; padding:8px 12px; background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.18); color:#bbf7d0; font-weight:900; font-size:13px; }
-    .hero h1 { margin-top:18px; max-width:620px; font-size:clamp(46px,7vw,86px); line-height:.92; letter-spacing:-3px; }
-    .hero p { max-width:620px; margin-top:16px; color:#dbeafe; font-size:18px; line-height:1.45; }
-    .hero-links { display:flex; gap:10px; flex-wrap:wrap; margin-top:22px; }
-    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:42px; padding:0 16px; border-radius:999px; border:0; text-decoration:none; cursor:pointer; font-weight:950; font-size:14px; transition:transform .15s ease, filter .15s ease; }
-    .btn:hover { transform:translateY(-1px); filter:brightness(.98); }
-    .btn-primary { background:var(--green); color:#052e16; }
-    .btn-ghost { background:rgba(255,255,255,.12); color:white; border:1px solid rgba(255,255,255,.18); }
-    .side-stack { display:grid; gap:18px; }
-    .panel { background:var(--card); border:1px solid rgba(226,232,240,.72); border-radius:var(--radius-xl); padding:22px; box-shadow:var(--shadow); min-width:0; }
-    body.dark .panel { border-color:var(--line); }
-    .panel-title { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:16px; }
-    .panel h2 { font-size:24px; letter-spacing:-.7px; }
-    .small { font-size:13px; color:var(--muted); line-height:1.45; }
-    .pill { display:inline-flex; align-items:center; gap:8px; border-radius:999px; padding:7px 10px; background:#dcfce7; color:#166534; font-size:12px; font-weight:950; white-space:nowrap; }
-    .pill.warn { background:#ffedd5; color:#c2410c; }
-    body.dark .pill { background:rgba(34,197,94,.18); color:#86efac; } body.dark .pill.warn{ background:rgba(249,115,22,.2); color:#fdba74; }
-    .status-dot { width:9px; height:9px; border-radius:99px; background:var(--green); box-shadow:0 0 0 6px rgba(34,197,94,.12); }
-    .status-dot.warn { background:var(--orange); box-shadow:0 0 0 6px rgba(249,115,22,.12); }
-    .hero-match-card { border-radius:26px; padding:18px; background:radial-gradient(circle at top right,rgba(34,197,94,.16),transparent 30%),var(--card-soft); border:1px solid var(--line); }
-    .versus { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px; margin:18px 0 12px; }
-    .versus-team { display:grid; gap:8px; justify-items:center; text-align:center; font-weight:950; min-width:0; }
-    .flag { width:54px; height:38px; display:grid; place-items:center; border-radius:10px; background:var(--card); border:1px solid var(--line); font-size:25px; box-shadow:var(--shadow-soft); overflow:hidden; font-weight:950; color:var(--ink); }
-    .flag.text-flag { font-size:13px; letter-spacing:.08em; }
-    .vs-pill { display:grid; place-items:center; min-width:54px; height:44px; border-radius:999px; background:var(--navy); color:var(--card); padding:0 10px; font-weight:950; }
-    body.dark .vs-pill { background:#e2e8f0; color:#0f172a; }
-    .kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
-    .kpi { background:var(--card); border:1px solid var(--line); border-radius:24px; padding:18px; box-shadow:var(--shadow-soft); min-width:0; }
-    .kpi strong { display:block; font-size:34px; line-height:1; letter-spacing:-1.6px; margin-bottom:7px; }
-    .kpi span { display:block; color:var(--muted); font-size:13px; font-weight:850; }
-    .grid { display:grid; grid-template-columns:repeat(12,1fr); gap:18px; align-items:start; }
-    .span-4{grid-column:span 4}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
-    .tabs { display:flex; align-items:center; gap:8px; overflow-x:auto; padding-bottom:3px; margin-bottom:16px; }
-    .tab { border:1px solid var(--line); background:var(--card); color:var(--muted); border-radius:999px; padding:10px 14px; font-weight:950; white-space:nowrap; cursor:pointer; }
-    .tab.active { color:white; border-color:var(--blue); background:var(--blue); box-shadow:0 8px 22px rgba(37,99,235,.22); }
-    .date-group { margin-bottom:22px; }
-    .date-title { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:0 2px; margin:16px 0 12px; }
-    .date-title h3 { font-size:22px; letter-spacing:-.8px; } .date-title span{color:var(--muted); font-weight:850; font-size:13px;}
-    .fixture-list { display:grid; gap:12px; }
-    .fixture { position:relative; background:var(--card); border:1px solid var(--line); border-radius:22px; padding:18px; box-shadow:var(--shadow-soft); overflow:hidden; }
-    .fixture:before { content:""; position:absolute; left:0; top:18px; bottom:18px; width:4px; border-radius:99px; background:var(--blue); opacity:.72; }
-    .fixture-main { display:grid; grid-template-columns:1fr minmax(74px,auto) 1fr; align-items:center; gap:12px; padding-left:4px; }
-    .team-side { display:flex; align-items:center; gap:10px; min-width:0; font-weight:950; font-size:20px; }
-    .team-side.away { justify-content:flex-end; text-align:right; }
-    .team-code { white-space:nowrap; letter-spacing:-.3px; }
-    .center-score { display:grid; justify-items:center; gap:4px; text-align:center; }
-    .match-time { color:var(--blue); font-size:28px; font-weight:850; letter-spacing:-1px; white-space:nowrap; }
-    .match-score { font-size:30px; font-weight:950; letter-spacing:-1.3px; white-space:nowrap; }
-    .live-label,.status-label { display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:4px 8px; font-size:11px; font-weight:950; text-transform:uppercase; letter-spacing:.04em; }
-    .live-label { color:white; background:var(--red); } .status-label{color:var(--muted); background:var(--card-soft); border:1px solid var(--line);}
-    .pulse { width:7px; height:7px; border-radius:99px; background:currentColor; animation:pulse 1.4s infinite; } @keyframes pulse {0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.75)}}
-    .fixture-meta { display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:14px; padding-top:13px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; font-weight:850; text-align:center; }
-    .badge { display:inline-flex; align-items:center; gap:5px; border-radius:999px; padding:5px 9px; font-size:12px; font-weight:950; background:var(--card-soft); border:1px solid var(--line); color:var(--muted); }
-    .badge.green{background:#dcfce7;color:#166534;border-color:transparent}.badge.blue{background:#dbeafe;color:#1d4ed8;border-color:transparent}.badge.orange{background:#ffedd5;color:#c2410c;border-color:transparent}.badge.purple{background:#ede9fe;color:#5b21b6;border-color:transparent}.badge.red{background:#fee2e2;color:#b91c1c;border-color:transparent}
-    .media-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:12px; justify-content:center; }
-    .media-chip { display:inline-flex; align-items:center; justify-content:center; min-height:30px; border-radius:10px; padding:0 10px; border:1px solid var(--line); background:var(--card-soft); text-decoration:none; font-size:12px; font-weight:950; }
-    .media-chip.sporza { background:#111827; color:white; border-color:#111827; }
-    .empty { display:grid; gap:12px; justify-items:start; background:radial-gradient(circle at top right,rgba(37,99,235,.10),transparent 30%),var(--card); border:2px dashed var(--line); border-radius:24px; padding:22px; color:var(--muted); line-height:1.5; }
-    .empty strong { color:var(--ink); font-size:18px; }
-    .link-card-list { display:grid; gap:10px; }
-    .link-card { display:flex; justify-content:space-between; gap:12px; align-items:center; text-decoration:none; border:1px solid var(--line); background:var(--card-soft); border-radius:18px; padding:14px; transition:.15s; }
-    .link-card:hover { transform:translateY(-1px); border-color:var(--blue); }
-    .link-card strong { display:block; margin-bottom:3px; }
-    .mini-list { display:grid; gap:10px; }
-    .mini-row { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; border-radius:16px; background:var(--card-soft); border:1px solid var(--line); padding:12px; }
-    .standings { display:grid; gap:16px; }
-    .group-table { border-radius:20px; border:1px solid var(--line); overflow:hidden; background:var(--card); }
-    .group-table h3 { padding:14px; background:var(--card-soft); border-bottom:1px solid var(--line); }
-    table { width:100%; border-collapse:collapse; font-size:13px; } th,td { padding:10px 12px; border-bottom:1px solid var(--line); text-align:left; } tr:last-child td{border-bottom:0} th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em} td{font-weight:800}
-    .bracket { display:grid; grid-template-columns:repeat(5,minmax(180px,1fr)); gap:12px; overflow-x:auto; padding-bottom:6px; }
-    .bracket-col { min-width:180px; } .bracket-col h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:9px}
-    .bracket-match { border:1px solid var(--line); background:var(--card-soft); border-radius:16px; padding:12px; margin-bottom:10px; }
-    .bracket-team { display:flex; justify-content:space-between; gap:8px; padding:6px 0; font-weight:900; font-size:13px; }.bracket-team+.bracket-team{border-top:1px solid var(--line)}
-    details { border:1px solid var(--line); background:var(--card); border-radius:20px; padding:14px 16px; box-shadow:var(--shadow-soft); } summary{cursor:pointer;font-weight:950}.code-block{margin-top:12px;background:#020617;color:#e2e8f0;border-radius:16px;padding:14px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:12px;line-height:1.6}
-    .bottom-nav { position:fixed; left:12px; right:12px; bottom:12px; z-index:30; display:none; grid-template-columns:repeat(4,1fr); background:rgba(7,23,47,.94); color:white; border:1px solid rgba(255,255,255,.12); border-radius:24px; box-shadow:0 18px 60px rgba(0,0,0,.35); backdrop-filter:blur(16px); padding:10px 8px; }
-    .bottom-nav a { display:grid; justify-items:center; gap:4px; text-decoration:none; color:#cbd5e1; font-size:11px; font-weight:850; }.bottom-nav a.active{color:var(--green)}
-    @media(max-width:980px){.hero{grid-template-columns:1fr}.kpi-grid,.grid{grid-template-columns:1fr 1fr}.span-4,.span-8,.span-12{grid-column:span 2}}
-    @media(max-width:680px){body{padding-bottom:92px}.shell{padding:14px}.topbar{align-items:flex-start;flex-direction:column}.top-actions{width:100%;justify-content:space-between}.control{flex:1;min-width:0}.control select{max-width:135px}.hero-main{min-height:auto;padding:26px}.hero-content{min-height:300px}.hero h1{font-size:52px}.kpi-grid,.grid{grid-template-columns:1fr}.span-4,.span-8,.span-12{grid-column:span 1}.fixture{padding:16px 12px 14px}.fixture-main{grid-template-columns:1fr auto 1fr;gap:8px}.team-side{gap:6px;font-size:18px}.flag{width:42px;height:30px;border-radius:8px;font-size:21px}.flag.text-flag{font-size:11px}.match-time,.match-score{font-size:25px}.bottom-nav{display:grid}}
+
+    body.dark {
+      --bg: #07111f;
+      --card: #0f1b2e;
+      --soft: #14233a;
+      --navy: #f8fafc;
+      --navy-2: #0b1220;
+      --text: #f8fafc;
+      --muted: #a8b3c7;
+      --line: #26364f;
+      --shadow: 0 18px 55px rgba(0, 0, 0, 0.25);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(34,197,94,.18), transparent 28%),
+        radial-gradient(circle at 95% 5%, rgba(37,99,235,.14), transparent 28%),
+        var(--bg);
+      color: var(--text);
+      padding-bottom: 88px;
+    }
+
+    a { color: inherit; }
+
+    .app {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 22px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 950;
+      letter-spacing: -0.4px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--navy-2), var(--green-dark));
+      color: white;
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    select, button, .button {
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 850;
+      box-shadow: 0 8px 25px rgba(15,23,42,.06);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at 72% 22%, rgba(255,255,255,.24), transparent 21%),
+        radial-gradient(circle at 80% 86%, rgba(34,197,94,.42), transparent 25%),
+        linear-gradient(135deg, #05152d, #0f2e4e 52%, #14532d);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 34px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 900;
+      font-size: 13px;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.18);
+      color: #d1fae5;
+    }
+
+    h1 {
+      margin: 18px 0 12px;
+      font-size: clamp(42px, 8vw, 82px);
+      line-height: .92;
+      letter-spacing: -3px;
+    }
+
+    .hero p {
+      max-width: 600px;
+      margin: 0;
+      font-size: 18px;
+      color: #dbeafe;
+      line-height: 1.5;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .hero-actions a {
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-weight: 950;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .primary { background: var(--green); color: #052e16; }
+    .ghost { background: rgba(255,255,255,.12); color: white; border: 1px solid rgba(255,255,255,.18); }
+
+    .spotlight {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 28px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 260px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .spot-title { font-size: 14px; color: #bbf7d0; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; }
+    .spot-ball { font-size: 62px; margin: 16px 0; }
+    .spot-match { font-size: 24px; font-weight: 950; line-height: 1.15; }
+    .spot-meta { color: #dbeafe; margin-top: 8px; font-weight: 700; }
+
+    .status-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin: 18px 0;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 850;
+      box-shadow: var(--shadow);
+      color: var(--text);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 0 6px rgba(34,197,94,.13);
+    }
+
+    .dot.warn { background: var(--orange); box-shadow: 0 0 0 6px rgba(249,115,22,.14); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    h2 { margin: 0; font-size: 22px; letter-spacing: -.5px; color: var(--text); }
+    .small { color: var(--muted); font-size: 14px; font-weight: 700; line-height: 1.45; }
+
+    .chip {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 12px;
+      font-weight: 950;
+      white-space: nowrap;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    body.dark .chip { background: #0d3d29; color: #86efac; }
+    .chip.blue { background: #dbeafe; color: #1d4ed8; }
+    body.dark .chip.blue { background: #172554; color: #93c5fd; }
+    .chip.orange { background: #ffedd5; color: #c2410c; }
+    body.dark .chip.orange { background: #431407; color: #fdba74; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .kpi {
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+    }
+    .kpi strong { display: block; font-size: 32px; letter-spacing: -1px; margin-bottom: 4px; }
+    .kpi span { color: var(--muted); font-size: 13px; font-weight: 850; }
+
+    .link-grid { display: grid; gap: 10px; }
+    .link-card {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      text-decoration: none;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .link-card:hover { transform: translateY(-1px); border-color: var(--blue); }
+    .link-card strong { display: block; margin-bottom: 3px; }
+    .arrow { color: var(--blue); font-weight: 950; }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 16px;
+    }
+
+    .filter {
+      border: 1px solid var(--line);
+      background: var(--soft);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 9px 13px;
+      font-weight: 950;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: none;
+    }
+
+    .filter.active { background: var(--navy-2); color: white; border-color: var(--navy-2); }
+
+    .fixture-empty {
+      background: var(--soft);
+      border: 1px dashed var(--line);
+      border-radius: 20px;
+      padding: 20px;
+      color: var(--muted);
+      font-weight: 750;
+      line-height: 1.5;
+    }
+
+    .date-group { margin-bottom: 22px; }
+    .date-title { font-weight: 950; font-size: 18px; margin: 0 0 12px; padding-left: 10px; border-left: 4px solid var(--blue); }
+    .match-list { display: grid; gap: 12px; }
+
+    .fixture {
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+    }
+
+    .fixture-top {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .team {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 950;
+      font-size: 19px;
+      min-width: 0;
+    }
+    .team.away { justify-content: flex-end; }
+    .flag {
+      width: 42px;
+      height: 30px;
+      border-radius: 6px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      flex: 0 0 auto;
+    }
+    .center { text-align: center; color: var(--blue); font-weight: 950; font-size: 27px; white-space: nowrap; }
+    .fixture-meta { text-align: center; color: var(--muted); font-size: 13px; font-weight: 800; margin-top: 12px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th { text-align: left; color: var(--muted); padding: 0 0 10px; }
+    td { padding: 10px 0; border-top: 1px solid var(--line); font-weight: 750; }
+
+    .bracket {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(170px, 1fr));
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .bracket-col { min-width: 170px; }
+    .bracket-col h3 { margin: 0 0 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); }
+    .bracket-box { background: var(--soft); border: 1px solid var(--line); border-radius: 16px; padding: 12px; margin-bottom: 10px; }
+    .bracket-team { display: flex; justify-content: space-between; gap: 8px; font-weight: 850; padding: 6px 0; }
+    .bracket-team + .bracket-team { border-top: 1px solid var(--line); }
+    .bracket-note { color: var(--muted); font-size: 12px; font-weight: 800; margin-top: 6px; }
+
+    details {
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+    }
+    summary { cursor: pointer; font-weight: 950; }
+    pre { white-space: pre-wrap; overflow: auto; color: var(--muted); font-size: 12px; }
+
+    .bottom-nav {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      max-width: 520px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: #06152d;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 24px;
+      padding: 11px 8px;
+      box-shadow: 0 18px 50px rgba(15, 23, 42, .35);
+      z-index: 20;
+    }
+    .bottom-nav a { text-align: center; color: #cbd5e1; text-decoration: none; font-size: 12px; font-weight: 900; }
+    .bottom-nav a.active { color: var(--green); }
+
+    @media (max-width: 900px) {
+      .app { padding: 14px; }
+      .hero { padding: 24px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .span-3, .span-4, .span-5, .span-6, .span-7, .span-8, .span-12 { grid-column: span 1; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .bracket { grid-template-columns: repeat(5, 180px); }
+      .topbar { align-items: flex-start; }
+    }
+
+    @media (max-width: 560px) {
+      .topbar { flex-direction: column; }
+      .top-actions { justify-content: flex-start; width: 100%; }
+      select, button, .button { width: 100%; justify-content: center; }
+      h1 { letter-spacing: -2px; }
+      .fixture-top { grid-template-columns: 1fr; text-align: center; }
+      .team, .team.away { justify-content: center; }
+      .center { font-size: 25px; }
+      .spotlight { min-height: 210px; }
+    }
   </style>
 </head>
 <body>
-  <div class="shell">
+  <main class="app">
     <div class="topbar">
-      <div class="brand"><div class="brand-mark">⚽</div><div><div>WorldCup 2026 Dashboard</div><div class="small">Unofficial fan dashboard · bron: FIFA-link</div></div></div>
+      <div class="brand">
+        <div class="brand-icon">⚽</div>
+        <div>
+          <div>WorldCup 2026</div>
+          <div class="small">Unofficial fan dashboard</div>
+        </div>
+      </div>
       <div class="top-actions">
-        <label class="control">🌍 Tijdzone
-          <select id="timezoneSelect">
-            <option value="Europe/Brussels">België · Brussels</option><option value="Europe/Amsterdam">Nederland · Amsterdam</option><option value="Europe/London">UK · London</option><option value="America/New_York">USA · Eastern</option><option value="America/Chicago">USA · Central</option><option value="America/Denver">USA · Mountain</option><option value="America/Los_Angeles">USA · Pacific</option><option value="America/Mexico_City">Mexico City</option><option value="America/Vancouver">Vancouver</option>
-          </select>
-        </label>
-        <button class="theme-btn" id="themeToggle" type="button">🌙 Dark</button>
+        <select id="timezoneSelect" aria-label="Tijdzone">
+          <option value="Europe/Brussels" selected>België · Brussels</option>
+          <option value="Europe/London">UK · London</option>
+          <option value="America/New_York">USA · Eastern</option>
+          <option value="America/Chicago">USA · Central</option>
+          <option value="America/Los_Angeles">USA · Pacific</option>
+          <option value="America/Mexico_City">Mexico City</option>
+          <option value="America/Toronto">Toronto</option>
+          <option value="America/Vancouver">Vancouver</option>
+        </select>
+        <button id="themeToggle">🌙 Dark</button>
       </div>
     </div>
 
     <section class="hero" id="home">
-      <div class="hero-main"><div class="hero-content"><div><span class="eyebrow"><span id="statusDot" class="status-dot warn"></span><span id="statusText">Officiële data wordt gecontroleerd</span></span><h1>World Cup<br>2026</h1><p>Een strakker dashboard voor wedstrijdschema, Belgische tijden, groepen, media-links en knock-out preview. Geen random demo-uitslagen meer.</p><div class="hero-links"><a class="btn btn-primary" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/scores-fixtures?country=BE&wtw-filter=ALL" target="_blank" rel="noopener">Open FIFA-schema BE</a><a class="btn btn-ghost" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/standings" target="_blank" rel="noopener">Standings</a><a class="btn btn-ghost" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/teams" target="_blank" rel="noopener">Teams</a></div></div><div class="small" id="dataSourceLine">Bronstatus: nog geen officiële fixture-data in dit bestand.</div></div></div>
-      <aside class="side-stack">
-        <div class="panel"><div class="panel-title"><div><h2>Volgende match</h2><div class="small" id="nextMatchSub">Op basis van ingeladen officiële fixtures</div></div><span class="pill warn" id="nextMatchBadge">Wacht op data</span></div><div id="nextMatchCard" class="hero-match-card"><div class="small">Nog geen officiële fixture-data ingeladen.</div></div></div>
-        <div class="panel"><div class="panel-title"><div><h2>Snel naar</h2><div class="small">Handige officiële bronnen</div></div></div><div class="link-card-list"><a class="link-card" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/scores-fixtures?country=BE&wtw-filter=ALL" target="_blank" rel="noopener"><div><strong>FIFA scores & fixtures</strong><span class="small">Schema in Belgische context</span></div><span>→</span></a><a class="link-card" href="https://sporza.be/nl/categorie/voetbal/wk-voetbal-2026-in-canada-mexico-en-de-verenigde-staten/" target="_blank" rel="noopener"><div><strong>Sporza WK 2026</strong><span class="small">Belgische invalshoek</span></div><span>→</span></a></div></div>
-      </aside>
+      <div class="hero-grid">
+        <div>
+          <span class="badge">⚡ FIFA-link first · geen fake scores</span>
+          <h1>WorldCup<br>2026</h1>
+          <p>Een mooi mobiel dashboard voor fixtures, stats, media, groepen en knock-out. De app toont alleen zelf wedstrijden wanneer ze in de officiële fixturelijst staan.</p>
+          <div class="hero-actions">
+            <a class="primary" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/scores-fixtures?country=BE&wtw-filter=ALL" target="_blank" rel="noopener">Open FIFA scores</a>
+            <a class="ghost" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/standings" target="_blank" rel="noopener">Standen</a>
+            <a class="ghost" href="https://www.vrt.be/vrtmax/a-z/sporza--fifa-wk-voetbal-2026/" target="_blank" rel="noopener">Sporza / VRT MAX</a>
+          </div>
+        </div>
+        <aside class="spotlight">
+          <div>
+            <div class="spot-title">Topwedstrijd / spotlight</div>
+            <div class="spot-ball">🏆</div>
+            <div class="spot-match" id="spotlightMatch">Nog geen officiële fixture geladen</div>
+            <div class="spot-meta" id="spotlightMeta">Voeg fixtures toe om dit automatisch te vullen.</div>
+          </div>
+        </aside>
+      </div>
     </section>
 
-    <section class="kpi-grid"><div class="kpi"><strong id="kpiMatches">0</strong><span>Officiële wedstrijden geladen</span></div><div class="kpi"><strong id="kpiToday">0</strong><span>Wedstrijden vandaag</span></div><div class="kpi"><strong id="kpiFinished">0</strong><span>Afgelopen matchen</span></div><div class="kpi"><strong id="kpiGoals">0</strong><span>Goals uit geladen data</span></div></section>
+    <div class="status-row">
+      <div class="status-pill"><span class="dot warn" id="sourceDot"></span><span id="sourceStatus">Bronstatus: geen lokale FIFA-fixturelijst actief</span></div>
+      <div class="status-pill">Tijdzone: <span id="tzLabel">België · Brussels</span></div>
+    </div>
 
     <section class="grid">
-      <article class="panel span-8" id="schedule"><div class="panel-title"><div><h2>Speelschema</h2><div class="small">Alle tijden worden getoond in de gekozen tijdzone. Standaard: België.</div></div><span class="pill" id="timezonePill">Europe/Brussels</span></div><div class="tabs" id="filters"><button class="tab active" type="button" data-filter="all">Alles</button><button class="tab" type="button" data-filter="today">Vandaag</button><button class="tab" type="button" data-filter="upcoming">Komend</button><button class="tab" type="button" data-filter="finished">Afgelopen</button><button class="tab" type="button" data-filter="knockout">Knock-out</button></div><div id="scheduleList"></div></article>
-      <aside class="panel span-4" id="media"><div class="panel-title"><div><h2>Media & live kijken</h2><div class="small">Links, geen gekopieerde artikels of video’s.</div></div><span class="badge blue">Links</span></div><div class="link-card-list"><a class="link-card" href="https://sporza.be/nl/categorie/voetbal/wk-voetbal-2026-in-canada-mexico-en-de-verenigde-staten/" target="_blank" rel="noopener"><div><strong>Sporza WK 2026 Hub</strong><span class="small">Nieuws, video en Belgische context</span></div><span>→</span></a><a class="link-card" href="https://www.vrt.be/vrtmax/" target="_blank" rel="noopener"><div><strong>VRT MAX</strong><span class="small">Live kijken via VRT-platform</span></div><span>→</span></a><a class="link-card" href="https://www.rtbf.be/auvio/" target="_blank" rel="noopener"><div><strong>Auvio / RTBF</strong><span class="small">Franstalige Belgische link</span></div><span>→</span></a><a class="link-card" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/news" target="_blank" rel="noopener"><div><strong>FIFA nieuws</strong><span class="small">Officiële toernooisite</span></div><span>→</span></a></div></aside>
-      <article class="panel span-4"><div class="panel-title"><div><h2>Stats & topscorers</h2><div class="small">Geen fake topscorers. Eerst linken naar betrouwbare bronnen.</div></div><span class="badge orange">Bronnen</span></div><div class="link-card-list"><a class="link-card" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/statistics" target="_blank" rel="noopener"><div><strong>FIFA statistics</strong><span class="small">Officiële statistieken</span></div><span>→</span></a><a class="link-card" href="https://www.espn.com/soccer/stats/_/league/FIFA.WORLD" target="_blank" rel="noopener"><div><strong>ESPN stats</strong><span class="small">Scores, assists en stats</span></div><span>→</span></a><a class="link-card" href="https://fbref.com/en/comps/1/World-Cup-Stats" target="_blank" rel="noopener"><div><strong>FBref analytics</strong><span class="small">Diepere voetbaldata</span></div><span>→</span></a></div></article>
-      <article class="panel span-4" id="groups"><div class="panel-title"><div><h2>Groepen</h2><div class="small">Wordt berekend zodra officiële uitslagen zijn ingeladen.</div></div><span class="badge purple">Stand</span></div><div id="standingsBox" class="standings"></div></article>
-      <article class="panel span-4"><div class="panel-title"><div><h2>Favorieten</h2><div class="small">Later klikbaar maken. Nu veilig voorbereid.</div></div><span class="badge green">Local</span></div><div id="favoritesBox" class="mini-list"></div></article>
-      <article class="panel span-12" id="bracket"><div class="panel-title"><div><h2>Knock-out bracket</h2><div class="small">Vult zich automatisch met wedstrijden die als r32, r16, qf, sf, final zijn ingevoerd.</div></div><span class="badge blue">Preview</span></div><div id="bracketBox" class="bracket"></div></article>
-      <article class="span-12"><details><summary>Data toevoegen / debug</summary><div class="small" style="margin-top:12px;">Deze versie toont bewust geen demo-wedstrijden meer. Zet officiële data in <strong>OFFICIAL_FIXTURES</strong> in deze HTML, of upload later een <strong>fixtures.json</strong> naast je index.html. Tijden geef je best in UTC op; de app rekent ze dan om naar België of de gekozen tijdzone.</div><pre class="code-block">[
-  {
-    "id": "match-001",
-    "utc": "2026-06-11T19:00:00Z",
-    "home": "Mexico",
-    "away": "South Africa",
-    "group": "Group A",
-    "round": "Group stage",
-    "type": "group",
-    "stadium": "Estadio Azteca",
-    "city": "Mexico City",
-    "status": "upcoming",
-    "homeScore": null,
-    "awayScore": null
-  }
-]</pre><div id="debugBox" class="small"></div></details></article>
-    </section>
-  </div>
+      <article class="card span-3">
+        <div class="card-head"><div><h2>Toernooi</h2><div class="small">Vaste basisinfo</div></div><span class="chip">2026</span></div>
+        <div class="kpi-grid">
+          <div class="kpi"><strong>48</strong><span>Teams</span></div>
+          <div class="kpi"><strong>104</strong><span>Wedstrijden</span></div>
+          <div class="kpi"><strong>16</strong><span>Gaststeden</span></div>
+          <div class="kpi"><strong>3</strong><span>Landen</span></div>
+        </div>
+      </article>
 
-  <nav class="bottom-nav"><a href="#home" class="active"><span>⌂</span><span>Home</span></a><a href="#schedule"><span>▦</span><span>Schema</span></a><a href="#media"><span>◉</span><span>Media</span></a><a href="#bracket"><span>⌁</span><span>Bracket</span></a></nav>
+      <article class="card span-5" id="stats">
+        <div class="card-head"><div><h2>Stats hub</h2><div class="small">Betrouwbare externe stats, geen verzonnen data</div></div><span class="chip blue">FIFA</span></div>
+        <div class="link-grid">
+          <a class="link-card" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/statistics/team-statistics" target="_blank" rel="noopener"><div><strong>Team statistics</strong><span class="small">Teams, goals, performance en meer.</span></div><span class="arrow">→</span></a>
+          <a class="link-card" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/statistics/player-statistics" target="_blank" rel="noopener"><div><strong>Player statistics</strong><span class="small">Spelers, goals, assists en individuele stats.</span></div><span class="arrow">→</span></a>
+          <a class="link-card" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/adidas-golden-boot-race-top-scorer" target="_blank" rel="noopener"><div><strong>Golden Boot race</strong><span class="small">Topscorers via FIFA.</span></div><span class="arrow">→</span></a>
+        </div>
+      </article>
+
+      <article class="card span-4" id="media">
+        <div class="card-head"><div><h2>Media</h2><div class="small">Live kijken en nieuws</div></div><span class="chip orange">Links</span></div>
+        <div class="link-grid">
+          <a class="link-card" href="https://www.vrt.be/vrtmax/a-z/sporza--fifa-wk-voetbal-2026/" target="_blank" rel="noopener"><div><strong>Sporza: FIFA WK 2026</strong><span class="small">Liveverslagen via VRT MAX.</span></div><span class="arrow">→</span></a>
+          <a class="link-card" href="https://www.vrt.be/vrtmax/kanalen/sporza/" target="_blank" rel="noopener"><div><strong>VRT MAX Sporza</strong><span class="small">Sporza-kanaal en uitzendingen.</span></div><span class="arrow">→</span></a>
+          <a class="link-card" href="https://www.rtbf.be/auvio/" target="_blank" rel="noopener"><div><strong>Auvio / RTBF</strong><span class="small">Franstalige uitzendingen en sport.</span></div><span class="arrow">→</span></a>
+        </div>
+      </article>
+
+      <article class="card span-8" id="matches">
+        <div class="card-head"><div><h2>Speelschema</h2><div class="small">Basis klaar voor officiële fixtures, standaard in Belgische tijd</div></div><span class="chip" id="fixtureCount">0 fixtures</span></div>
+        <div class="filters">
+          <button class="filter active" data-filter="all">Alles</button>
+          <button class="filter" data-filter="today">Vandaag</button>
+          <button class="filter" data-filter="group">Groepen</button>
+          <button class="filter" data-filter="knockout">Knock-out</button>
+          <button class="filter" data-filter="favorites">Favorieten</button>
+        </div>
+        <div id="fixtureList"></div>
+      </article>
+
+      <article class="card span-4">
+        <div class="card-head"><div><h2>Favorieten</h2><div class="small">Lokaal opgeslagen in je browser</div></div><span class="chip">Mijn teams</span></div>
+        <div class="kpi-grid">
+          <div class="kpi"><strong>🇧🇪</strong><span>België</span></div>
+          <div class="kpi"><strong>🇳🇱</strong><span>Nederland</span></div>
+          <div class="kpi"><strong>🇫🇷</strong><span>Frankrijk</span></div>
+          <div class="kpi"><strong>🇧🇷</strong><span>Brazilië</span></div>
+        </div>
+        <p class="small" style="margin-top:14px;">Later maken we dit klikbaar, dan filtert het dashboard automatisch op je favoriete landen.</p>
+      </article>
+
+      <article class="card span-6" id="groups">
+        <div class="card-head"><div><h2>Groepen</h2><div class="small">Vult automatisch wanneer officiële fixtures/standen toegevoegd zijn</div></div><span class="chip blue">Stand</span></div>
+        <div id="groupsBox" class="fixture-empty">Nog geen lokale groepsstanden geladen. Gebruik voorlopig de officiële FIFA-standings via de knop bovenaan.</div>
+      </article>
+
+      <article class="card span-6" id="bracket">
+        <div class="card-head"><div><h2>Knock-out preview</h2><div class="small">Ronde van 32 tot finale</div></div><span class="chip">Bracket</span></div>
+        <div class="bracket" id="bracketBox"></div>
+      </article>
+
+      <article class="card span-12">
+        <details>
+          <summary>Debug & volgende stap</summary>
+          <pre id="debugText">Wacht op initialisatie...</pre>
+        </details>
+      </article>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="#home" class="active">Home</a>
+    <a href="#matches">Matches</a>
+    <a href="#stats">Stats</a>
+    <a href="#bracket">Bracket</a>
+  </nav>
 
   <script>
-    const FIFA_FIXTURES_URL = "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/scores-fixtures?country=BE&wtw-filter=ALL";
+    /* =========================================================
+      OFFICIAL FIXTURES
+      Voeg hier later alleen officiële FIFA-fixtures toe.
+      Gebruik UTC ISO-tijd, dan rekent de app correct om naar België.
+      Voorbeeld:
+      { id: 1, utc: "2026-06-11T19:00:00Z", team1: "Mexico", team2: "South Africa", group: "Group A", round: "Group stage", venue: "Estadio Azteca", status: "scheduled", score: null }
+    ========================================================= */
     const OFFICIAL_FIXTURES = [];
-    const FALLBACK_FIXTURES_JSON = "fixtures.json";
-    const DEFAULT_TIMEZONE = localStorage.getItem("wc26_timezone") || "Europe/Brussels";
-    const DEFAULT_THEME = localStorage.getItem("wc26_theme") || "light";
-    let fixtures = []; let activeFilter = "all"; let selectedTimezone = DEFAULT_TIMEZONE;
-    const countryMeta = {"argentina":{code:"ARG",flag:"🇦🇷"},"australia":{code:"AUS",flag:"🇦🇺"},"austria":{code:"AUT",flag:"🇦🇹"},"belgium":{code:"BEL",flag:"🇧🇪"},"belgië":{code:"BEL",flag:"🇧🇪"},"brazil":{code:"BRA",flag:"🇧🇷"},"brazilië":{code:"BRA",flag:"🇧🇷"},"canada":{code:"CAN",flag:"🇨🇦"},"colombia":{code:"COL",flag:"🇨🇴"},"croatia":{code:"CRO",flag:"🇭🇷"},"czech republic":{code:"CZE",flag:"🇨🇿"},"czechia":{code:"CZE",flag:"🇨🇿"},"denmark":{code:"DEN",flag:"🇩🇰"},"ecuador":{code:"ECU",flag:"🇪🇨"},"england":{code:"ENG",flag:null},"france":{code:"FRA",flag:"🇫🇷"},"germany":{code:"GER",flag:"🇩🇪"},"ghana":{code:"GHA",flag:"🇬🇭"},"iran":{code:"IRN",flag:"🇮🇷"},"italy":{code:"ITA",flag:"🇮🇹"},"ivory coast":{code:"CIV",flag:"🇨🇮"},"côte d'ivoire":{code:"CIV",flag:"🇨🇮"},"japan":{code:"JPN",flag:"🇯🇵"},"mexico":{code:"MEX",flag:"🇲🇽"},"morocco":{code:"MAR",flag:"🇲🇦"},"netherlands":{code:"NED",flag:"🇳🇱"},"nederland":{code:"NED",flag:"🇳🇱"},"nigeria":{code:"NGA",flag:"🇳🇬"},"norway":{code:"NOR",flag:"🇳🇴"},"paraguay":{code:"PAR",flag:"🇵🇾"},"poland":{code:"POL",flag:"🇵🇱"},"portugal":{code:"POR",flag:"🇵🇹"},"qatar":{code:"QAT",flag:"🇶🇦"},"saudi arabia":{code:"KSA",flag:"🇸🇦"},"scotland":{code:"SCO",flag:null},"senegal":{code:"SEN",flag:"🇸🇳"},"serbia":{code:"SRB",flag:"🇷🇸"},"south africa":{code:"RSA",flag:"🇿🇦"},"south korea":{code:"KOR",flag:"🇰🇷"},"spain":{code:"ESP",flag:"🇪🇸"},"spanje":{code:"ESP",flag:"🇪🇸"},"sweden":{code:"SWE",flag:"🇸🇪"},"switzerland":{code:"SUI",flag:"🇨🇭"},"tunisia":{code:"TUN",flag:"🇹🇳"},"ukraine":{code:"UKR",flag:"🇺🇦"},"united states":{code:"USA",flag:"🇺🇸"},"usa":{code:"USA",flag:"🇺🇸"},"uruguay":{code:"URU",flag:"🇺🇾"},"wales":{code:"WAL",flag:null}};
-    document.addEventListener("DOMContentLoaded", init);
-    async function init(){setupTheme();setupTimezone();setupFilters();fixtures=await loadFixtures();fixtures=normalizeFixtures(fixtures);renderAll();}
-    function setupTheme(){const b=document.getElementById("themeToggle");if(DEFAULT_THEME==="dark"){document.body.classList.add("dark");b.textContent="☀️ Light"}b.addEventListener("click",()=>{const d=document.body.classList.toggle("dark");localStorage.setItem("wc26_theme",d?"dark":"light");b.textContent=d?"☀️ Light":"🌙 Dark"})}
-    function setupTimezone(){const s=document.getElementById("timezoneSelect");s.value=[...s.options].some(o=>o.value===selectedTimezone)?selectedTimezone:"Europe/Brussels";selectedTimezone=s.value;s.addEventListener("change",()=>{selectedTimezone=s.value;localStorage.setItem("wc26_timezone",selectedTimezone);renderAll()})}
-    function setupFilters(){document.getElementById("filters").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));b.classList.add("active");activeFilter=b.dataset.filter;renderSchedule();})}
-    async function loadFixtures(){if(Array.isArray(OFFICIAL_FIXTURES)&&OFFICIAL_FIXTURES.length>0){setDataStatus("Officiële fixtures uit index.html geladen",false);setSourceLine("Bronstatus: data geladen uit OFFICIAL_FIXTURES in dit bestand.");return OFFICIAL_FIXTURES}try{const r=await fetch(FALLBACK_FIXTURES_JSON,{cache:"no-store"});if(r.ok){const d=await r.json();const list=Array.isArray(d)?d:d.fixtures;if(Array.isArray(list)&&list.length>0){setDataStatus("fixtures.json geladen",false);setSourceLine("Bronstatus: data geladen uit fixtures.json. Controleer of deze gebaseerd is op FIFA.");return list}}}catch(e){console.info("Geen fixtures.json gevonden of niet bruikbaar.",e)}setDataStatus("Geen officiële fixture-data geladen",true);setSourceLine("Bronstatus: leeg. Voeg officiële data toe uit de FIFA scores & fixtures-link.");return []}
-    function normalizeFixtures(list){return list.map((item,i)=>{const home=cleanText(item.home||item.homeTeam||item.team1||item.home_team||"");const away=cleanText(item.away||item.awayTeam||item.team2||item.away_team||"");const status=normalizeStatus(item.status);const homeScore=toScore(item.homeScore??item.home_score??item.scoreHome);const awayScore=toScore(item.awayScore??item.away_score??item.scoreAway);const hasScore=homeScore!==null&&awayScore!==null;return{id:String(item.id||item.matchId||i+1),utc:item.utc||item.kickoffUtc||item.datetimeUtc||item.kickoff||"",home:home||"TBD",away:away||"TBD",group:cleanText(item.group||item.groupName||""),round:cleanText(item.round||item.stage||getRoundFromType(item.type)),type:cleanText(item.type||inferType(item.round||item.stage||item.group)),stadium:cleanText(item.stadium||item.venue||""),city:cleanText(item.city||item.location||""),status:hasScore&&status==="upcoming"?"finished":status,homeScore,awayScore,sourceUrl:item.sourceUrl||FIFA_FIXTURES_URL}}).filter(m=>m.utc&&m.home&&m.away).sort((a,b)=>new Date(a.utc)-new Date(b.utc))}
-    function renderAll(){document.getElementById("timezonePill").textContent=selectedTimezone;renderKpis();renderNextMatch();renderSchedule();renderStandings();renderFavorites();renderBracket();renderDebug()}
-    function renderKpis(){const today=getDateKey(new Date().toISOString(),selectedTimezone);document.getElementById("kpiMatches").textContent=fixtures.length;document.getElementById("kpiToday").textContent=fixtures.filter(m=>getDateKey(m.utc,selectedTimezone)===today).length;document.getElementById("kpiFinished").textContent=fixtures.filter(m=>m.status==="finished").length;document.getElementById("kpiGoals").textContent=fixtures.reduce((s,m)=>m.homeScore===null||m.awayScore===null?s:s+m.homeScore+m.awayScore,0)}
-    function renderNextMatch(){const next=fixtures.find(m=>new Date(m.utc)>=new Date()&&m.status!=="finished");const badge=document.getElementById("nextMatchBadge"),sub=document.getElementById("nextMatchSub"),box=document.getElementById("nextMatchCard");if(!next){badge.textContent=fixtures.length?"Geen komende match":"Wacht op data";badge.classList.add("warn");sub.textContent=fixtures.length?"Geen komende wedstrijden in geladen data.":"Op basis van ingeladen officiële fixtures";box.innerHTML=`<div class="empty" style="border:0;padding:0;background:transparent;"><strong>Nog geen officiële wedstrijddata</strong><div>Gebruik voorlopig de FIFA-link. Zodra de fixturelijst is toegevoegd, verschijnt hier automatisch de volgende match.</div><a class="btn btn-primary" href="${FIFA_FIXTURES_URL}" target="_blank" rel="noopener">Open FIFA-schema</a></div>`;return}badge.textContent=next.status==="live"?"Live":"Volgende";badge.classList.toggle("warn",next.status!=="live");sub.textContent=formatDateLong(next.utc,selectedTimezone);box.innerHTML=`<div class="versus"><div class="versus-team">${flagHtml(next.home)}<span>${escapeHtml(next.home)}</span></div><div class="vs-pill">${next.status==="finished"&&next.homeScore!==null?`${next.homeScore}-${next.awayScore}`:formatTime(next.utc,selectedTimezone)}</div><div class="versus-team">${flagHtml(next.away)}<span>${escapeHtml(next.away)}</span></div></div><div class="small" style="text-align:center;">${escapeHtml(next.round||next.group||"Match")} · ${escapeHtml([next.stadium,next.city].filter(Boolean).join(" · ")||"Locatie volgt")}</div>`}
-    function renderSchedule(){const target=document.getElementById("scheduleList");if(!fixtures.length){target.innerHTML=emptyScheduleHtml();return}const filtered=applyFilter(fixtures);if(!filtered.length){target.innerHTML=`<div class="empty"><strong>Geen wedstrijden voor deze filter</strong><div>Probeer “Alles” of controleer of de officiële fixture-data volledig is ingevuld.</div></div>`;return}const grouped=groupByDate(filtered,selectedTimezone);target.innerHTML=Object.keys(grouped).map(dateKey=>`<section class="date-group"><div class="date-title"><h3>${escapeHtml(formatDateKey(dateKey))}</h3><span>${grouped[dateKey].length} match${grouped[dateKey].length===1?"":"en"}</span></div><div class="fixture-list">${grouped[dateKey].map(fixtureCard).join("")}</div></section>`).join("")}
-    function fixtureCard(m){const scoreOrTime=m.homeScore!==null&&m.awayScore!==null?`<div class="match-score">${m.homeScore} - ${m.awayScore}</div>`:`<div class="match-time">${formatTime(m.utc,selectedTimezone)}</div>`;const statusHtml=m.status==="live"?`<span class="live-label"><span class="pulse"></span>Live</span>`:m.status==="finished"?`<span class="status-label">Afgelopen</span>`:`<span class="status-label">${formatTimeZoneShort(m.utc,selectedTimezone)}</span>`;const venue=[m.stadium,m.city].filter(Boolean).join(" · ");return `<article class="fixture"><div class="fixture-main"><div class="team-side home"><span class="team-code">${escapeHtml(getCode(m.home))}</span>${flagHtml(m.home)}</div><div class="center-score">${scoreOrTime}${statusHtml}</div><div class="team-side away">${flagHtml(m.away)}<span class="team-code">${escapeHtml(getCode(m.away))}</span></div></div><div class="fixture-meta"><span class="badge ${badgeClass(m.type)}">${escapeHtml(m.group||m.round||"Match")}</span><span>${escapeHtml(m.round||"Wedstrijd")}</span><span>·</span><span>${escapeHtml(venue||"Locatie volgt")}</span></div><div class="media-row"><span class="small">Media:</span><a class="media-chip sporza" href="https://sporza.be/nl/categorie/voetbal/wk-voetbal-2026-in-canada-mexico-en-de-verenigde-staten/" target="_blank" rel="noopener">Sporza</a><a class="media-chip" href="https://www.vrt.be/vrtmax/" target="_blank" rel="noopener">VRT MAX</a><a class="media-chip" href="${escapeAttr(FIFA_FIXTURES_URL)}" target="_blank" rel="noopener">FIFA</a></div></article>`}
-    function renderStandings(){const target=document.getElementById("standingsBox");const tables=calculateStandings(fixtures);if(!Object.keys(tables).length){target.innerHTML=`<div class="empty"><strong>Nog geen groepsstand</strong><div>Groepen worden automatisch berekend zodra officiële uitslagen in de fixture-data staan.</div></div>`;return}target.innerHTML=Object.keys(tables).sort().slice(0,4).map(group=>{const rows=tables[group].sort((a,b)=>b.pts-a.pts||b.gd-a.gd||b.gf-a.gf).map(t=>`<tr><td>${escapeHtml(getCode(t.name))}</td><td>${t.p}</td><td>${t.gd}</td><td><strong>${t.pts}</strong></td></tr>`).join("");return `<div class="group-table"><h3>${escapeHtml(group)}</h3><table><thead><tr><th>Team</th><th>G</th><th>DS</th><th>Ptn</th></tr></thead><tbody>${rows}</tbody></table></div>`}).join("")}
-    function renderFavorites(){const target=document.getElementById("favoritesBox");const teams=uniqueTeams(fixtures).slice(0,6);if(!teams.length){target.innerHTML=`<div class="empty"><strong>Nog geen teams geladen</strong><div>Zodra officiële data is toegevoegd, kan je hier favorieten bovenaan zetten.</div></div>`;return}target.innerHTML=teams.map(team=>`<div class="mini-row"><div><strong>${escapeHtml(team)}</strong><span class="small">${escapeHtml(getCode(team))}</span></div>${flagHtml(team)}</div>`).join("")}
-    function renderBracket(){const target=document.getElementById("bracketBox");const columns=[{title:"Ronde van 32",types:["r32","round of 32"]},{title:"Achtste finale",types:["r16","round of 16"]},{title:"Kwartfinale",types:["qf","quarter"]},{title:"Halve finale",types:["sf","semi"]},{title:"Finale",types:["final","third"]}];target.innerHTML=columns.map(c=>{const ms=fixtures.filter(m=>c.types.some(t=>String(m.type||m.round).toLowerCase().includes(t)));return `<div class="bracket-col"><h3>${escapeHtml(c.title)}</h3>${ms.length?ms.slice(0,8).map(bracketCard).join(""):`<div class="bracket-match"><div class="small">Nog te bepalen</div></div>`}</div>`}).join("")}
-    function bracketCard(m){return `<div class="bracket-match"><div class="bracket-team"><span>${escapeHtml(getCode(m.home))}</span><span>${m.homeScore??""}</span></div><div class="bracket-team"><span>${escapeHtml(getCode(m.away))}</span><span>${m.awayScore??""}</span></div><div class="small">${formatDateShort(m.utc,selectedTimezone)} · ${formatTime(m.utc,selectedTimezone)}</div></div>`}
-    function renderDebug(){document.getElementById("debugBox").innerHTML=`<br>Aantal fixtures geladen: <strong>${fixtures.length}</strong><br>Tijdzone: <strong>${escapeHtml(selectedTimezone)}</strong><br>Filter: <strong>${escapeHtml(activeFilter)}</strong><br>FIFA bronlink: <a href="${FIFA_FIXTURES_URL}" target="_blank" rel="noopener">openen</a>`}
-    function emptyScheduleHtml(){return `<div class="empty"><strong>Geen officiële fixture-data geladen</strong><div>Ik heb bewust alle demo-wedstrijden en fake uitslagen verwijderd. Daardoor toont de app niets dat niet uit officiële data komt. Open voorlopig de FIFA-link of voeg later een fixturelijst toe.</div><div style="display:flex;gap:10px;flex-wrap:wrap;"><a class="btn btn-primary" href="${FIFA_FIXTURES_URL}" target="_blank" rel="noopener">Open FIFA-schema BE</a><a class="btn" style="background:var(--card-soft);color:var(--ink);border:1px solid var(--line);" href="#media">Media-links</a></div></div>`}
-    function setDataStatus(t,w){document.getElementById("statusText").textContent=t;document.getElementById("statusDot").classList.toggle("warn",!!w)}function setSourceLine(t){document.getElementById("dataSourceLine").textContent=t}
-    function applyFilter(list){const today=getDateKey(new Date().toISOString(),selectedTimezone);if(activeFilter==="today")return list.filter(m=>getDateKey(m.utc,selectedTimezone)===today);if(activeFilter==="upcoming")return list.filter(m=>new Date(m.utc)>=new Date()&&m.status!=="finished");if(activeFilter==="finished")return list.filter(m=>m.status==="finished");if(activeFilter==="knockout")return list.filter(m=>["r32","r16","qf","sf","final","third"].some(t=>String(m.type).toLowerCase().includes(t)));return list}
-    function groupByDate(list,tz){return list.reduce((g,m)=>{const k=getDateKey(m.utc,tz);(g[k]||(g[k]=[])).push(m);return g},{})}
-    function calculateStandings(list){const s={};list.forEach(m=>{if(!m.group||!String(m.group).toLowerCase().includes("group"))return;if(m.homeScore===null||m.awayScore===null)return;const g=m.group;if(!s[g])s[g]={};ensure(s[g],m.home);ensure(s[g],m.away);const h=m.homeScore,a=m.awayScore;s[g][m.home].p++;s[g][m.away].p++;s[g][m.home].gf+=h;s[g][m.home].ga+=a;s[g][m.away].gf+=a;s[g][m.away].ga+=h;if(h>a){s[g][m.home].pts+=3;s[g][m.home].w++;s[g][m.away].l++}else if(a>h){s[g][m.away].pts+=3;s[g][m.away].w++;s[g][m.home].l++}else{s[g][m.home].pts++;s[g][m.away].pts++;s[g][m.home].d++;s[g][m.away].d++}});Object.values(s).forEach(g=>Object.values(g).forEach(t=>{t.gd=t.gf-t.ga}));const out={};Object.keys(s).forEach(g=>out[g]=Object.values(s[g]));return out}
-    function ensure(g,name){if(!g[name])g[name]={name,p:0,w:0,d:0,l:0,gf:0,ga:0,gd:0,pts:0}}
-    function uniqueTeams(list){const seen=new Set(),teams=[];list.forEach(m=>[m.home,m.away].forEach(t=>{const k=String(t).toLowerCase();if(!seen.has(k)&&t&&t!=="TBD"){seen.add(k);teams.push(t)}}));return teams}
-    function normalizeStatus(v){const s=String(v||"upcoming").toLowerCase();if(s.includes("live")||s.includes("playing")||s.includes("in_play"))return"live";if(s.includes("finished")||s.includes("final")||s==="ft"||s==="completed")return"finished";return"upcoming"}
-    function getRoundFromType(t){return {group:"Group stage",r32:"Round of 32",r16:"Round of 16",qf:"Quarter-final",sf:"Semi-final",third:"Third place",final:"Final"}[String(t||"").toLowerCase()]||""}
-    function inferType(v){const t=String(v||"").toLowerCase();if(t.includes("32"))return"r32";if(t.includes("16"))return"r16";if(t.includes("quarter"))return"qf";if(t.includes("semi"))return"sf";if(t.includes("third"))return"third";if(t.includes("final"))return"final";if(t.includes("group"))return"group";return""}
-    function badgeClass(t){t=String(t||"").toLowerCase();if(t.includes("group"))return"green";if(t.includes("r32")||t.includes("r16"))return"blue";if(t.includes("qf"))return"orange";if(t.includes("sf"))return"purple";if(t.includes("final"))return"red";return""}
-    function getCountryMeta(team){const n=String(team||"").toLowerCase().trim();for(const k in countryMeta)if(n.includes(k))return countryMeta[k];const f=String(team||"TBD").slice(0,3).toUpperCase();return {code:f||"TBD",flag:null}}
-    function getCode(team){return getCountryMeta(team).code}function flagHtml(team){const m=getCountryMeta(team);return m.flag?`<span class="flag" aria-label="${escapeAttr(m.code)}">${m.flag}</span>`:`<span class="flag text-flag" aria-label="${escapeAttr(m.code)}">${escapeHtml(m.code)}</span>`}
-    function toScore(v){if(v===undefined||v===null||v===""||String(v).toLowerCase()==="null")return null;const n=Number(v);return Number.isFinite(n)?n:null}function cleanText(v){if(v===undefined||v===null)return"";const t=String(v).trim();return t.toLowerCase()==="null"?"":t}
-    function formatTime(iso,tz){return new Intl.DateTimeFormat("nl-BE",{timeZone:tz,hour:"2-digit",minute:"2-digit"}).format(new Date(iso))}function formatTimeZoneShort(iso,tz){const p=new Intl.DateTimeFormat("nl-BE",{timeZone:tz,timeZoneName:"short"}).formatToParts(new Date(iso));const z=p.find(x=>x.type==="timeZoneName");return z?z.value:tz}
-    function formatDateLong(iso,tz){return new Intl.DateTimeFormat("nl-BE",{timeZone:tz,weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date(iso))}function formatDateShort(iso,tz){return new Intl.DateTimeFormat("nl-BE",{timeZone:tz,day:"2-digit",month:"short"}).format(new Date(iso))}
-    function getDateKey(iso,tz){const p=new Intl.DateTimeFormat("en-CA",{timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date(iso));return `${p.find(x=>x.type==="year").value}-${p.find(x=>x.type==="month").value}-${p.find(x=>x.type==="day").value}`}function formatDateKey(k){return new Intl.DateTimeFormat("nl-BE",{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date(k+"T12:00:00Z"))}
-    function escapeHtml(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}function escapeAttr(v){return escapeHtml(v).replaceAll("`","&#096;")}
+
+    const FAVORITES = ["Belgium", "België", "Netherlands", "Nederland", "France", "Frankrijk", "Brazil", "Brazilië"];
+
+    const FLAGS = {
+      "mexico":"🇲🇽", "south africa":"🇿🇦", "south korea":"🇰🇷", "czech republic":"🇨🇿", "czechia":"🇨🇿",
+      "canada":"🇨🇦", "usa":"🇺🇸", "united states":"🇺🇸", "belgium":"🇧🇪", "belgië":"🇧🇪", "netherlands":"🇳🇱", "nederland":"🇳🇱",
+      "france":"🇫🇷", "brazil":"🇧🇷", "brazilië":"🇧🇷", "argentina":"🇦🇷", "argentinië":"🇦🇷", "spain":"🇪🇸", "spanje":"🇪🇸",
+      "portugal":"🇵🇹", "germany":"🇩🇪", "japan":"🇯🇵", "morocco":"🇲🇦", "marokko":"🇲🇦", "senegal":"🇸🇳", "uruguay":"🇺🇾",
+      "switzerland":"🇨🇭", "qatar":"🇶🇦", "australia":"🇦🇺", "turkey":"🇹🇷", "england":"ENG", "scotland":"SCO", "wales":"WAL"
+    };
+
+    const CODES = {
+      "mexico":"MEX", "south africa":"RSA", "south korea":"KOR", "czech republic":"CZE", "czechia":"CZE",
+      "canada":"CAN", "usa":"USA", "united states":"USA", "belgium":"BEL", "belgië":"BEL", "netherlands":"NED", "nederland":"NED",
+      "france":"FRA", "brazil":"BRA", "brazilië":"BRA", "argentina":"ARG", "argentinië":"ARG", "spain":"ESP", "spanje":"ESP",
+      "portugal":"POR", "germany":"GER", "japan":"JPN", "morocco":"MAR", "marokko":"MAR", "senegal":"SEN", "uruguay":"URU",
+      "switzerland":"SUI", "qatar":"QAT", "australia":"AUS", "turkey":"TUR", "england":"ENG", "scotland":"SCO", "wales":"WAL"
+    };
+
+    let activeFilter = "all";
+    let activeTimezone = localStorage.getItem("wc26Timezone") || "Europe/Brussels";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initTheme();
+      initTimezone();
+      initFilters();
+      renderAll();
+    });
+
+    function initTheme() {
+      const saved = localStorage.getItem("wc26Theme");
+      const btn = document.getElementById("themeToggle");
+      if (saved === "dark") {
+        document.body.classList.add("dark");
+        btn.textContent = "☀️ Light";
+      }
+      btn.addEventListener("click", () => {
+        const dark = document.body.classList.toggle("dark");
+        btn.textContent = dark ? "☀️ Light" : "🌙 Dark";
+        localStorage.setItem("wc26Theme", dark ? "dark" : "light");
+      });
+    }
+
+    function initTimezone() {
+      const select = document.getElementById("timezoneSelect");
+      select.value = activeTimezone;
+      updateTimezoneLabel();
+      select.addEventListener("change", () => {
+        activeTimezone = select.value;
+        localStorage.setItem("wc26Timezone", activeTimezone);
+        updateTimezoneLabel();
+        renderAll();
+      });
+    }
+
+    function updateTimezoneLabel() {
+      const labels = {
+        "Europe/Brussels": "België · Brussels",
+        "Europe/London": "UK · London",
+        "America/New_York": "USA · Eastern",
+        "America/Chicago": "USA · Central",
+        "America/Los_Angeles": "USA · Pacific",
+        "America/Mexico_City": "Mexico City",
+        "America/Toronto": "Toronto",
+        "America/Vancouver": "Vancouver"
+      };
+      document.getElementById("tzLabel").textContent = labels[activeTimezone] || activeTimezone;
+    }
+
+    function initFilters() {
+      document.querySelectorAll(".filter").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          activeFilter = btn.dataset.filter;
+          renderFixtures();
+        });
+      });
+    }
+
+    function renderAll() {
+      renderSourceStatus();
+      renderSpotlight();
+      renderFixtures();
+      renderBracket();
+      renderDebug();
+    }
+
+    function renderSourceStatus() {
+      const count = OFFICIAL_FIXTURES.length;
+      const status = document.getElementById("sourceStatus");
+      const dot = document.getElementById("sourceDot");
+      const countLabel = document.getElementById("fixtureCount");
+      countLabel.textContent = count + " fixtures";
+      if (count > 0) {
+        status.textContent = "Bronstatus: officiële lokale fixturelijst actief";
+        dot.classList.remove("warn");
+      } else {
+        status.textContent = "Bronstatus: geen lokale FIFA-fixturelijst actief";
+        dot.classList.add("warn");
+      }
+    }
+
+    function renderSpotlight() {
+      const next = [...OFFICIAL_FIXTURES].sort((a,b) => new Date(a.utc) - new Date(b.utc))[0];
+      if (!next) return;
+      document.getElementById("spotlightMatch").textContent = `${next.team1} vs ${next.team2}`;
+      document.getElementById("spotlightMeta").textContent = `${formatFixtureDate(next.utc)} · ${next.round || next.group || "Match"} · ${next.venue || "Venue TBD"}`;
+    }
+
+    function renderFixtures() {
+      const target = document.getElementById("fixtureList");
+      let fixtures = [...OFFICIAL_FIXTURES];
+      const todayKey = formatKey(new Date());
+
+      if (activeFilter === "today") fixtures = fixtures.filter(f => formatKey(new Date(f.utc)) === todayKey);
+      if (activeFilter === "group") fixtures = fixtures.filter(f => String(f.round || f.group || "").toLowerCase().includes("group"));
+      if (activeFilter === "knockout") fixtures = fixtures.filter(f => !String(f.round || f.group || "").toLowerCase().includes("group"));
+      if (activeFilter === "favorites") fixtures = fixtures.filter(f => FAVORITES.some(x => f.team1?.toLowerCase().includes(x.toLowerCase()) || f.team2?.toLowerCase().includes(x.toLowerCase())));
+
+      if (!fixtures.length) {
+        target.innerHTML = `<div class="fixture-empty">
+          <strong>Geen officiële fixtures in deze lokale app-lijst.</strong><br>
+          Dat is bewust: ik toon hier geen demo-wedstrijden meer, zodat er geen foute landen, uren of uitslagen verschijnen.<br><br>
+          Gebruik voorlopig de knop <strong>Open FIFA scores</strong>. Zodra je de officiële fixturelijst als tekst/CSV plakt of uploadt, zet ik die in <code>OFFICIAL_FIXTURES</code> en wordt dit schema automatisch gevuld in de gekozen tijdzone.
+        </div>`;
+        return;
+      }
+
+      fixtures.sort((a,b) => new Date(a.utc) - new Date(b.utc));
+      const grouped = groupBy(fixtures, f => formatDateHeading(f.utc));
+      target.innerHTML = Object.keys(grouped).map(date => `
+        <div class="date-group">
+          <div class="date-title">${escapeHtml(date)}</div>
+          <div class="match-list">${grouped[date].map(fixtureCard).join("")}</div>
+        </div>
+      `).join("");
+    }
+
+    function fixtureCard(f) {
+      const center = f.score ? `${f.score.home} - ${f.score.away}` : formatFixtureTime(f.utc);
+      return `<div class="fixture">
+        <div class="fixture-top">
+          <div class="team home"><span>${escapeHtml(getCode(f.team1))}</span><span class="flag">${getFlag(f.team1)}</span></div>
+          <div class="center">${escapeHtml(center)}</div>
+          <div class="team away"><span class="flag">${getFlag(f.team2)}</span><span>${escapeHtml(getCode(f.team2))}</span></div>
+        </div>
+        <div class="fixture-meta">${escapeHtml(f.round || f.group || "Match")} · ${escapeHtml(f.venue || "Venue TBD")}</div>
+      </div>`;
+    }
+
+    function renderBracket() {
+      const rounds = ["Round of 32", "Round of 16", "Quarter-finals", "Semi-finals", "Final"];
+      document.getElementById("bracketBox").innerHTML = rounds.map(round => `
+        <div class="bracket-col">
+          <h3>${escapeHtml(round)}</h3>
+          <div class="bracket-box">
+            <div class="bracket-team"><span>TBD</span><span>—</span></div>
+            <div class="bracket-team"><span>TBD</span><span>—</span></div>
+            <div class="bracket-note">Wordt gevuld met officiële data</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderDebug() {
+      document.getElementById("debugText").textContent = `Fixtures lokaal: ${OFFICIAL_FIXTURES.length}\nTijdzone: ${activeTimezone}\nStatus: klaar voor officiële FIFA-data\nGeen externe API en geen demo-uitslagen actief.`;
+    }
+
+    function formatFixtureTime(utc) {
+      return new Intl.DateTimeFormat("nl-BE", { hour: "2-digit", minute: "2-digit", timeZone: activeTimezone }).format(new Date(utc));
+    }
+
+    function formatFixtureDate(utc) {
+      return new Intl.DateTimeFormat("nl-BE", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: activeTimezone }).format(new Date(utc));
+    }
+
+    function formatDateHeading(utc) { return formatFixtureDate(utc); }
+
+    function formatKey(date) {
+      return new Intl.DateTimeFormat("sv-SE", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: activeTimezone }).format(date);
+    }
+
+    function groupBy(arr, fn) {
+      return arr.reduce((acc, item) => {
+        const key = fn(item);
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(item);
+        return acc;
+      }, {});
+    }
+
+    function getFlag(name) {
+      const n = String(name || "").toLowerCase();
+      for (const key in FLAGS) if (n.includes(key)) return FLAGS[key];
+      return "🏳️";
+    }
+
+    function getCode(name) {
+      const n = String(name || "").toLowerCase();
+      for (const key in CODES) if (n.includes(key)) return CODES[key];
+      return String(name || "TBD").slice(0,3).toUpperCase();
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+    }
   </script>
 </body>
 </html>
